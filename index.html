@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temporizador Avanzado</title>
+    <title>Temporizador con Sonido Alternado</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #1a1a2e; color: #e0e0e0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; transition: background-color 0.3s ease; }
         .container { background-color: #16213e; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); width: 100%; max-width: 500px; text-align: center; }
@@ -34,7 +34,7 @@
 <body>
 
     <div class="container">
-        <h1>Temporizador Avanzado</h1>
+        <h1>Temporizador con Sonido Alternado</h1>
 
         <div class="section">
             <h2>Presets</h2>
@@ -44,11 +44,11 @@
 
         <div id="config-section" class="section">
             <h2>Configuración</h2>
-            <div> <strong>Tiempo Total:</strong> <div class="input-group"> <input type="number" id="total-minutes" placeholder="Min" min="0" value="10"> <span>:</span> <input type="number" id="total-seconds" placeholder="Seg" min="0" max="59" value="0"> </div> </div>
-            <div> <strong>Añadir Aviso:</strong> <div class="input-group"> <input type="number" id="alert-minutes" placeholder="Min" min="0"> <span>:</span> <input type="number" id="alert-seconds" placeholder="Seg" min="0" max="59"> <button id="add-alert-btn" class="btn btn-primary">Añadir</button> </div> </div>
+            <div> <strong>Tiempo Total:</strong> <div class="input-group"> <input type="number" id="total-minutes" placeholder="Min" min="0" value="0"> <span>:</span> <input type="number" id="total-seconds" placeholder="Seg" min="0" max="59" value="15"> </div> </div>
+            <div> <strong>Añadir Aviso (cambio de nota):</strong> <div class="input-group"> <input type="number" id="alert-minutes" placeholder="Min" min="0"> <span>:</span> <input type="number" id="alert-seconds" placeholder="Seg" min="0" max="59"> <button id="add-alert-btn" class="btn btn-primary">Añadir</button> </div> </div>
         </div>
 
-        <div id="timer-display">10:00</div>
+        <div id="timer-display">00:15</div>
 
         <div class="controls input-group">
             <button id="start-btn" class="btn btn-success">Iniciar</button>
@@ -62,21 +62,17 @@
         </div>
     </div>
     
-    <!-- Sonidos en Base64. El atributo preload="auto" sugiere al navegador que los cargue. -->
-    <!-- Sonido de Inicio (Clic) -->
-    <audio id="start-sound" preload="auto" src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU RockT/9/gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//g-"></audio>
-    <!-- Sonido de Aviso (Beep) -->
-    <audio id="alert-sound" preload="auto" src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU RockT/9/gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//gP//g-"></audio>
-    <!-- Sonido Final (Chime) -->
-    <audio id="final-sound" preload="auto" src="data:audio/wav;base64,UklGRqRoS1JXVWpveU5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk5OTk-"></audio>
-
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- SELECCIÓN DE ELEMENTOS DEL DOM ---
-        const startSound = document.getElementById('start-sound');
-        const alertSound = document.getElementById('alert-sound');
-        const finalSound = document.getElementById('final-sound');
+        // --- WEB AUDIO API SETUP ---
+        let audioCtx = null;
+        let currentOscillator = null;
+        let gainNode = null;
 
+        const FREQ_BASE = 432; 
+        const FREQ_ALERT = 528; 
+        
+        // --- DOM ELEMENTS ---
         const totalMinutesInput = document.getElementById('total-minutes');
         const totalSecondsInput = document.getElementById('total-seconds');
         const alertMinutesInput = document.getElementById('alert-minutes');
@@ -93,24 +89,71 @@
         const savePresetBtn = document.getElementById('save-preset-btn');
         const presetNameInput = document.getElementById('preset-name');
         
-        // --- VARIABLES DE ESTADO ---
+        // --- TIMER STATE ---
         let timerInterval = null;
         let totalSeconds = 0;
         let remainingSeconds = 0;
         let alerts = []; 
         const originalTitle = document.title;
-        let isFirstStart = true;
+        let currentToneFrequency = FREQ_BASE;
 
-        // --- FUNCIONES ---
-
-        function playSound(soundElement) {
-            // Reinicia el audio y lo reproduce. El .catch es para evitar errores en consola si algo falla.
-            soundElement.currentTime = 0;
-            soundElement.play().catch(error => console.error("Error al reproducir sonido:", error));
+        // --- AUDIO FUNCTIONS ---
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                gainNode = audioCtx.createGain();
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); 
+                gainNode.connect(audioCtx.destination);
+            }
         }
 
+        function playTone(frequency) {
+            if (!audioCtx) return;
+            stopTone();
+
+            currentOscillator = audioCtx.createOscillator();
+            currentOscillator.type = 'sine';
+            currentOscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            currentOscillator.connect(gainNode);
+            currentOscillator.start();
+            currentToneFrequency = frequency;
+        }
+
+        function stopTone() {
+            if (currentOscillator) {
+                currentOscillator.stop();
+                currentOscillator.disconnect();
+                currentOscillator = null;
+            }
+        }
+        
+        function playFinalAlarm() {
+            if (!audioCtx) return;
+            stopTone();
+
+            const now = audioCtx.currentTime;
+            const tempGain = audioCtx.createGain();
+            tempGain.connect(audioCtx.destination);
+            
+            for (let i = 0; i < 3; i++) {
+                const osc = audioCtx.createOscillator();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(880, now + i * 0.2);
+                osc.connect(tempGain);
+                osc.start(now + i * 0.2);
+                osc.stop(now + i * 0.2 + 0.1);
+            }
+        }
+
+        // --- TIMER FUNCTIONS ---
         function startTimer() {
             if (timerInterval) return;
+
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            playTone(currentToneFrequency);
             toggleConfigInputs(true);
             timerInterval = setInterval(tick, 1000);
         }
@@ -118,19 +161,22 @@
         function pauseTimer() {
             clearInterval(timerInterval);
             timerInterval = null;
+            stopTone();
             toggleConfigInputs(false); 
         }
 
         function resetTimer() {
             clearInterval(timerInterval);
             timerInterval = null;
+            stopTone(); 
+            currentToneFrequency = FREQ_BASE;
+            
             totalSeconds = (parseInt(totalMinutesInput.value) || 0) * 60 + (parseInt(totalSecondsInput.value) || 0);
             remainingSeconds = totalSeconds;
             alerts.forEach(alert => alert.triggered = false);
             updateDisplay();
             toggleConfigInputs(false);
             document.title = originalTitle;
-            isFirstStart = true;
         }
 
         function tick() {
@@ -140,29 +186,39 @@
             if (remainingSeconds <= 0) {
                 clearInterval(timerInterval);
                 timerInterval = null;
-                playSound(finalSound);
+                playFinalAlarm();
                 visualFeedback('final');
                 document.title = "¡TIEMPO!";
                 toggleConfigInputs(false);
-                isFirstStart = true;
             }
         }
-
-        // --- LISTENERS ---
-
+        
+        function checkAlerts() {
+            alerts.forEach(alert => {
+                if (remainingSeconds === alert.time && !alert.triggered) {
+                    
+                    // === INICIO DE TU LÓGICA DE ALTERNANCIA ===
+                    // Si el tono actual es el base, cambia al de alerta.
+                    // Si no, cambia al base.
+                    const newFrequency = (currentToneFrequency === FREQ_BASE) ? FREQ_ALERT : FREQ_BASE;
+                    playTone(newFrequency); 
+                    // === FIN DE TU LÓGICA DE ALTERNANCIA ===
+                    
+                    visualFeedback('alert');
+                    alert.triggered = true;
+                }
+            });
+        }
+        
+        // --- EVENT LISTENERS ---
         startBtn.addEventListener('click', () => {
-            // === TU SOLUCIÓN IMPLEMENTADA ===
-            if (isFirstStart) {
-                playSound(startSound); // Reproducir el sonido de inicio en el primer clic.
-                console.log("Audio desbloqueado por interacción del usuario.");
-                isFirstStart = false; 
-            }
-            // ================================
-
+            initAudioContext();
+            
             if (!timerInterval) {
                 totalSeconds = (parseInt(totalMinutesInput.value) || 0) * 60 + (parseInt(totalSecondsInput.value) || 0);
                 remainingSeconds = totalSeconds;
                 alerts.forEach(a => a.triggered = false); 
+                currentToneFrequency = FREQ_BASE;
                 updateDisplay();
             }
             startTimer();
@@ -174,7 +230,6 @@
         function addAlert() { const minutes = parseInt(alertMinutesInput.value) || 0; const seconds = parseInt(alertSecondsInput.value) || 0; const alertTimeInSeconds = minutes * 60 + seconds; const currentTotalSeconds = (parseInt(totalMinutesInput.value) || 0) * 60 + (parseInt(totalSecondsInput.value) || 0); if (alertTimeInSeconds <= 0 || alertTimeInSeconds >= currentTotalSeconds) { alert("El tiempo del aviso debe ser mayor que 0 y menor que el tiempo total."); return; } if (alerts.some(alert => alert.time === alertTimeInSeconds)) { alert("Este aviso ya ha sido añadido."); return; } alerts.push({ time: alertTimeInSeconds, triggered: false }); updateAlertListUI(); alertMinutesInput.value = ''; alertSecondsInput.value = ''; }
         function deleteAlert(timeToDelete) { alerts = alerts.filter(alert => alert.time !== timeToDelete); updateAlertListUI(); }
         function toggleConfigInputs(disabled) { totalMinutesInput.disabled = disabled; totalSecondsInput.disabled = disabled; alertMinutesInput.disabled = disabled; alertSecondsInput.disabled = disabled; addAlertBtn.disabled = disabled; savePresetBtn.disabled = disabled; }
-        function checkAlerts() { alerts.forEach(alert => { if (remainingSeconds === alert.time && !alert.triggered) { playSound(alertSound); visualFeedback('alert'); alert.triggered = true; } }); }
         function visualFeedback(type) { body.classList.add(type === 'final' ? 'visual-feedback-final' : 'visual-feedback-alert'); setTimeout(() => { body.classList.remove('visual-feedback-final', 'visual-feedback-alert'); }, 1500); }
         function savePreset() { const name = presetNameInput.value.trim(); if (!name) { alert("Por favor, introduce un nombre para el preset."); return; } const presetData = { totalMinutes: totalMinutesInput.value, totalSeconds: totalSecondsInput.value, alerts: alerts.map(a => a.time) }; localStorage.setItem(`timer_preset_${name}`, JSON.stringify(presetData)); alert(`Preset "${name}" guardado.`); loadPresetsIntoSelect(); presetNameInput.value = ''; }
         function loadPresetsIntoSelect() { presetsSelect.innerHTML = ''; for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); if (key.startsWith('timer_preset_')) { const name = key.replace('timer_preset_', ''); const option = document.createElement('option'); option.value = name; option.textContent = name; presetsSelect.appendChild(option); } } }
