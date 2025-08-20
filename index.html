@@ -1,3 +1,4 @@
+    
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -45,7 +46,7 @@
         <div id="config-section" class="section">
             <h2>Configuración</h2>
             <div> <strong>Tiempo Total:</strong> <div class="input-group"> <input type="number" id="total-minutes" placeholder="Min" min="0" value="0"> <span>:</span> <input type="number" id="total-seconds" placeholder="Seg" min="0" max="59" value="15"> </div> </div>
-            <div> <strong>Añadir Aviso (cambio de nota):</strong> <div class="input-group"> <input type="number" id="alert-minutes" placeholder="Min" min="0"> <span>:</span> <input type="number" id="alert-seconds" placeholder="Seg" min="0" max="59"> <button id="add-alert-btn" class="btn btn-primary">Añadir</button> </div> </div>
+            <div> <strong>Añadir Aviso (tiempo transcurrido):</strong> <div class="input-group"> <input type="number" id="alert-minutes" placeholder="Min" min="0"> <span>:</span> <input type="number" id="alert-seconds" placeholder="Seg" min="0" max="59"> <button id="add-alert-btn" class="btn btn-primary">Añadir</button> </div> </div>
         </div>
 
         <div id="timer-display">00:15</div>
@@ -98,112 +99,23 @@
         let currentToneFrequency = FREQ_BASE;
 
         // --- AUDIO FUNCTIONS ---
-        function initAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                gainNode = audioCtx.createGain();
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); 
-                gainNode.connect(audioCtx.destination);
-            }
-        }
-
-        function playTone(frequency) {
-            if (!audioCtx) return;
-            stopTone();
-
-            currentOscillator = audioCtx.createOscillator();
-            currentOscillator.type = 'sine';
-            currentOscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-            currentOscillator.connect(gainNode);
-            currentOscillator.start();
-            currentToneFrequency = frequency;
-        }
-
-        function stopTone() {
-            if (currentOscillator) {
-                currentOscillator.stop();
-                currentOscillator.disconnect();
-                currentOscillator = null;
-            }
-        }
-        
-        function playFinalAlarm() {
-            if (!audioCtx) return;
-            stopTone();
-
-            const now = audioCtx.currentTime;
-            const tempGain = audioCtx.createGain();
-            tempGain.connect(audioCtx.destination);
-            
-            for (let i = 0; i < 3; i++) {
-                const osc = audioCtx.createOscillator();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(880, now + i * 0.2);
-                osc.connect(tempGain);
-                osc.start(now + i * 0.2);
-                osc.stop(now + i * 0.2 + 0.1);
-            }
-        }
+        function initAudioContext() { if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); gainNode = audioCtx.createGain(); gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); gainNode.connect(audioCtx.destination); } }
+        function playTone(frequency) { if (!audioCtx) return; stopTone(); currentOscillator = audioCtx.createOscillator(); currentOscillator.type = 'sine'; currentOscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime); currentOscillator.connect(gainNode); currentOscillator.start(); currentToneFrequency = frequency; }
+        function stopTone() { if (currentOscillator) { currentOscillator.stop(); currentOscillator.disconnect(); currentOscillator = null; } }
+        function playFinalAlarm() { if (!audioCtx) return; stopTone(); const now = audioCtx.currentTime; const tempGain = audioCtx.createGain(); tempGain.connect(audioCtx.destination); for (let i = 0; i < 3; i++) { const osc = audioCtx.createOscillator(); osc.type = 'square'; osc.frequency.setValueAtTime(880, now + i * 0.2); osc.connect(tempGain); osc.start(now + i * 0.2); osc.stop(now + i * 0.2 + 0.1); } }
 
         // --- TIMER FUNCTIONS ---
-        function startTimer() {
-            if (timerInterval) return;
-
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-
-            playTone(currentToneFrequency);
-            toggleConfigInputs(true);
-            timerInterval = setInterval(tick, 1000);
-        }
-
-        function pauseTimer() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            stopTone();
-            toggleConfigInputs(false); 
-        }
-
-        function resetTimer() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            stopTone(); 
-            currentToneFrequency = FREQ_BASE;
-            
-            totalSeconds = (parseInt(totalMinutesInput.value) || 0) * 60 + (parseInt(totalSecondsInput.value) || 0);
-            remainingSeconds = totalSeconds;
-            alerts.forEach(alert => alert.triggered = false);
-            updateDisplay();
-            toggleConfigInputs(false);
-            document.title = originalTitle;
-        }
-
-        function tick() {
-            remainingSeconds--;
-            updateDisplay();
-            checkAlerts();
-            if (remainingSeconds <= 0) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-                playFinalAlarm();
-                visualFeedback('final');
-                document.title = "¡TIEMPO!";
-                toggleConfigInputs(false);
-            }
-        }
+        function startTimer() { if (timerInterval) return; if (audioCtx.state === 'suspended') { audioCtx.resume(); } playTone(currentToneFrequency); toggleConfigInputs(true); timerInterval = setInterval(tick, 1000); }
+        function pauseTimer() { clearInterval(timerInterval); timerInterval = null; stopTone(); toggleConfigInputs(false); }
+        function resetTimer() { clearInterval(timerInterval); timerInterval = null; stopTone(); currentToneFrequency = FREQ_BASE; totalSeconds = (parseInt(totalMinutesInput.value) || 0) * 60 + (parseInt(totalSecondsInput.value) || 0); remainingSeconds = totalSeconds; alerts.forEach(alert => alert.triggered = false); updateDisplay(); toggleConfigInputs(false); document.title = originalTitle; }
+        function tick() { remainingSeconds--; updateDisplay(); checkAlerts(); if (remainingSeconds <= 0) { clearInterval(timerInterval); timerInterval = null; playFinalAlarm(); visualFeedback('final'); document.title = "¡TIEMPO!"; toggleConfigInputs(false); } }
         
         function checkAlerts() {
             alerts.forEach(alert => {
-                if (remainingSeconds === alert.time && !alert.triggered) {
-                    
-                    // === INICIO DE TU LÓGICA DE ALTERNANCIA ===
-                    // Si el tono actual es el base, cambia al de alerta.
-                    // Si no, cambia al base.
+                // La lógica aquí no cambia, sigue comparando con el tiempo restante.
+                if (remainingSeconds === alert.triggerTime && !alert.triggered) {
                     const newFrequency = (currentToneFrequency === FREQ_BASE) ? FREQ_ALERT : FREQ_BASE;
                     playTone(newFrequency); 
-                    // === FIN DE TU LÓGICA DE ALTERNANCIA ===
-                    
                     visualFeedback('alert');
                     alert.triggered = true;
                 }
@@ -211,29 +123,72 @@
         }
         
         // --- EVENT LISTENERS ---
-        startBtn.addEventListener('click', () => {
-            initAudioContext();
-            
-            if (!timerInterval) {
-                totalSeconds = (parseInt(totalMinutesInput.value) || 0) * 60 + (parseInt(totalSecondsInput.value) || 0);
-                remainingSeconds = totalSeconds;
-                alerts.forEach(a => a.triggered = false); 
-                currentToneFrequency = FREQ_BASE;
-                updateDisplay();
-            }
-            startTimer();
-        });
-
-        // El resto del código no necesita cambios
+        startBtn.addEventListener('click', () => { initAudioContext(); if (!timerInterval) { totalSeconds = (parseInt(totalMinutesInput.value) || 0) * 60 + (parseInt(totalSecondsInput.value) || 0); remainingSeconds = totalSeconds; alerts.forEach(a => a.triggered = false); currentToneFrequency = FREQ_BASE; updateDisplay(); } startTimer(); });
+        
+        // --- UI & DATA FUNCTIONS ---
         function updateDisplay() { const minutes = Math.floor(remainingSeconds / 60); const seconds = remainingSeconds % 60; const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; timerDisplay.textContent = formattedTime; if (timerInterval) { document.title = `${formattedTime} - ${originalTitle}`; } }
-        function updateAlertListUI() { alertList.innerHTML = ''; alerts.sort((a, b) => b.time - a.time); alerts.forEach(alert => { const minutes = Math.floor(alert.time / 60); const seconds = alert.time % 60; const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`; const li = document.createElement('li'); li.innerHTML = `<span>Aviso a los ${formattedTime}</span> <button class="delete-btn" data-time="${alert.time}">X</button>`; alertList.appendChild(li); }); }
-        function addAlert() { const minutes = parseInt(alertMinutesInput.value) || 0; const seconds = parseInt(alertSecondsInput.value) || 0; const alertTimeInSeconds = minutes * 60 + seconds; const currentTotalSeconds = (parseInt(totalMinutesInput.value) || 0) * 60 + (parseInt(totalSecondsInput.value) || 0); if (alertTimeInSeconds <= 0 || alertTimeInSeconds >= currentTotalSeconds) { alert("El tiempo del aviso debe ser mayor que 0 y menor que el tiempo total."); return; } if (alerts.some(alert => alert.time === alertTimeInSeconds)) { alert("Este aviso ya ha sido añadido."); return; } alerts.push({ time: alertTimeInSeconds, triggered: false }); updateAlertListUI(); alertMinutesInput.value = ''; alertSecondsInput.value = ''; }
-        function deleteAlert(timeToDelete) { alerts = alerts.filter(alert => alert.time !== timeToDelete); updateAlertListUI(); }
+        
+        function updateAlertListUI() {
+            alertList.innerHTML = '';
+            // Ordenamos por el tiempo que se muestra al usuario, no por el de disparo
+            alerts.sort((a, b) => b.displayTime - a.displayTime); 
+            alerts.forEach(alert => {
+                // <-- CAMBIO: Usamos 'alert.displayTime' para mostrar el valor correcto en la lista
+                const minutes = Math.floor(alert.displayTime / 60);
+                const seconds = alert.displayTime % 60;
+                const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+                const li = document.createElement('li');
+                // <-- CAMBIO: El botón de borrar ahora usa 'displayTime' como identificador
+                li.innerHTML = `<span>Aviso a los ${formattedTime}</span> <button class="delete-btn" data-time="${alert.displayTime}">X</button>`;
+                alertList.appendChild(li);
+            });
+        }
+
+        function addAlert() {
+            const minutes = parseInt(alertMinutesInput.value) || 0;
+            const seconds = parseInt(alertSecondsInput.value) || 0;
+            const alertTimeInSeconds = minutes * 60 + seconds; // Tiempo transcurrido que quiere el usuario
+            const currentTotalSeconds = (parseInt(totalMinutesInput.value) || 0) * 60 + (parseInt(totalSecondsInput.value) || 0);
+
+            if (alertTimeInSeconds <= 0 || alertTimeInSeconds >= currentTotalSeconds) {
+                alert("El tiempo del aviso debe ser mayor que 0 y menor que el tiempo total.");
+                return;
+            }
+            // <-- CAMBIO: Verificamos si ya existe un aviso con el mismo 'displayTime'
+            if (alerts.some(alert => alert.displayTime === alertTimeInSeconds)) {
+                alert("Este aviso ya ha sido añadido.");
+                return;
+            }
+
+            // <-- CAMBIO CLAVE: Calculamos cuándo debe sonar el aviso en el conteo regresivo
+            const triggerTimeInSeconds = currentTotalSeconds - alertTimeInSeconds;
+
+            // <-- CAMBIO: Guardamos ambos valores en el objeto del aviso
+            alerts.push({ 
+                displayTime: alertTimeInSeconds, // Para mostrar en la UI
+                triggerTime: triggerTimeInSeconds, // Para la lógica del temporizador
+                triggered: false 
+            });
+
+            updateAlertListUI();
+            alertMinutesInput.value = '';
+            alertSecondsInput.value = '';
+        }
+
+        function deleteAlert(timeToDelete) {
+            // <-- CAMBIO: Filtramos usando 'displayTime' que viene del atributo data-time
+            alerts = alerts.filter(alert => alert.displayTime !== timeToDelete);
+            updateAlertListUI();
+        }
+
         function toggleConfigInputs(disabled) { totalMinutesInput.disabled = disabled; totalSecondsInput.disabled = disabled; alertMinutesInput.disabled = disabled; alertSecondsInput.disabled = disabled; addAlertBtn.disabled = disabled; savePresetBtn.disabled = disabled; }
         function visualFeedback(type) { body.classList.add(type === 'final' ? 'visual-feedback-final' : 'visual-feedback-alert'); setTimeout(() => { body.classList.remove('visual-feedback-final', 'visual-feedback-alert'); }, 1500); }
-        function savePreset() { const name = presetNameInput.value.trim(); if (!name) { alert("Por favor, introduce un nombre para el preset."); return; } const presetData = { totalMinutes: totalMinutesInput.value, totalSeconds: totalSecondsInput.value, alerts: alerts.map(a => a.time) }; localStorage.setItem(`timer_preset_${name}`, JSON.stringify(presetData)); alert(`Preset "${name}" guardado.`); loadPresetsIntoSelect(); presetNameInput.value = ''; }
+        
+        // --- PRESET FUNCTIONS (sin cambios) ---
+        function savePreset() { const name = presetNameInput.value.trim(); if (!name) { alert("Por favor, introduce un nombre para el preset."); return; } const presetData = { totalMinutes: totalMinutesInput.value, totalSeconds: totalSecondsInput.value, alerts: alerts.map(a => a.displayTime) }; localStorage.setItem(`timer_preset_${name}`, JSON.stringify(presetData)); alert(`Preset "${name}" guardado.`); loadPresetsIntoSelect(); presetNameInput.value = ''; }
         function loadPresetsIntoSelect() { presetsSelect.innerHTML = ''; for (let i = 0; i < localStorage.length; i++) { const key = localStorage.key(i); if (key.startsWith('timer_preset_')) { const name = key.replace('timer_preset_', ''); const option = document.createElement('option'); option.value = name; option.textContent = name; presetsSelect.appendChild(option); } } }
-        function loadPreset() { const name = presetsSelect.value; if (!name) { alert("No hay ningún preset seleccionado para cargar."); return; } const presetData = JSON.parse(localStorage.getItem(`timer_preset_${name}`)); if (presetData) { totalMinutesInput.value = presetData.totalMinutes; totalSecondsInput.value = presetData.totalSeconds; alerts = presetData.alerts.map(time => ({ time: time, triggered: false })); updateAlertListUI(); resetTimer(); } }
+        function loadPreset() { const name = presetsSelect.value; if (!name) { alert("No hay ningún preset seleccionado para cargar."); return; } const presetData = JSON.parse(localStorage.getItem(`timer_preset_${name}`)); if (presetData) { totalMinutesInput.value = presetData.totalMinutes; totalSecondsInput.value = presetData.totalSeconds; const currentTotal = (parseInt(presetData.totalMinutes) || 0) * 60 + (parseInt(presetData.totalSeconds) || 0); alerts = presetData.alerts.map(time => ({ displayTime: time, triggerTime: currentTotal - time, triggered: false })); updateAlertListUI(); resetTimer(); } }
+        
         pauseBtn.addEventListener('click', pauseTimer);
         resetBtn.addEventListener('click', resetTimer);
         addAlertBtn.addEventListener('click', addAlert);
@@ -246,3 +201,5 @@
     </script>
 </body>
 </html>
+
+  
